@@ -1,0 +1,42 @@
+# ----- Default local configs ------
+[profile.default]
+src = "src"
+out = "out"
+libs = ["node_modules", "lib"]
+build_info = true
+extra_output = ["storageLayout"]
+ffi = true
+ast = true
+fs_permissions = [{ access = "read", path = "./out"}]
+memory_limit = 43554432
+gas_limit = "18446744073709551615"
+evm_version = "Cancun"
+
+# Fuzz seed helps invariant fork tests to reuse the cached rpc response when calling on chain functions
+[fuzz]
+seed = "0x0000000000000000000000000000000000000000000000000000000000000001"
+
+[invariant]
+runs = 10
+depth = 10
+fail_on_revert = false
+
+# ----- CI configs ------
+
+# inherits from default profile
+[profile.ci]
+fuzz = { runs = 5_000, max_test_rejects = 1000000 }
+
+# override runs and depth when running on gh actions
+[profile.ci.invariant]
+runs = 100
+depth = 50
+fail_on_revert = false
+
+# ----- RPC Endpoints ------
+
+[rpc_endpoints]
+arbitrum = "${ARB_RPC}"
+base = "${BASE_RPC}"
+
+# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
